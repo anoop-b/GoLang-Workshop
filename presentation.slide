@@ -1,0 +1,764 @@
+Introduction to Go: Golang Workshop
+15 July 2020
+
+Anoop B
+Full-Stack Developer
+
+@anoopkumarsb
+
+
+
+* About Me
+
+- Full Stack developer
+- AWS certified solutions architect
+- FOSS Contributor
+- Presented many technical talks and workshops in Tier 1,2 colleges in India 
+
+*Stack*: 
+
+- AWS, GCP
+- Flutter, Vue, Gridsome
+- Golang
+
+* Format
+
+- Talk -> exercise -> talk -> exercise ...
+- Short Q&A in between
+- Work on activities mentioned in the slides (depending on time availability)
+
+* Agenda
+
+- General facts
+- Running a hello world
+- Reasons to use Go
+- Development environment setup
+- Types
+- Control structures
+- Data structures
+- Functions
+- Interfaces
+- Concurrency
+
+* Facts
+
+- General Purpose Programming Language
+- Free/Open Source
+- Created at Google by Robert Griesemer, Rob Pike and Ken Thompson
+- Development started in 2007 and publicly released in November 2009
+- C like syntax (no semicolons)
+- Object Oriented (Composition over inheritance - no classes!)
+
+.image image/gopher1.png
+
+* Facts ...
+
+- Compiled (Statically linked)
+- Garbage collected
+- Statically typed
+- Strongly typed
+- built-in concurrency
+- Two major compilers: gc & gccgo
+- 25 keywords (less than C,C++,Python etc.)
+- Classification (Capitalized are exported - public)
+
+.image image/gopher2.png
+
+* Facts ...
+
+- Fast build (in seconds)
+- Unused imports and variables raise compile error
+- Operating Systems: Windows, GNU/Linux, Mac OS X, *BSD etc.
+- CPU Architectures: amd64, 386, arm etc.
+- Cross compilation
+- Standard library
+- No exceptions ([[https://blog.golang.org/errors-are-values][Errors are values]])
+- Pointers (No pointer arithmetic!)
+
+.image image/gopher3.png
+
+* Hello, world!
+
+.play code/hello.go
+
+- To play with Go programming online: [[http://play.golang.org]]
+
+* Why Go ?
+
+- [[http://commandcenter.blogspot.in/2012/06/less-is-exponentially-more.html][Simplicity]] (Small [[https://golang.org/ref/spec][spec]], 25 keywords)
+- Consistency
+- Readability
+- Safety (Type safety, Memory safety)
+- Speed (Compile time & Run time)
+
+.image image/gopher4.png
+
+* Installing Go Compiler on GNU/Linux
+
+- Download Go compiler binary from [[https://golang.org/dl]]
+- Extract it into your home directory (`$HOME/go`)
+- Create directory named `mygo` in your home directory (`$HOME/mygo`)
+- Add the following lines to your `$HOME/.bashrc`
+
+
+    export GOROOT=$HOME/go
+    export PATH=$GOROOT/bin:$PATH
+
+    export GOPATH=$HOME/mygo
+    export PATH=$GOPATH/bin:$PATH
+
+- [[https://golang.org/doc/install][https://golang.org/doc/install]]
+- *Activity*: Run "go help" command and read the output for 1 minute
+
+* Building and Running
+
+- You can run the program using "go run" command: go run hello.go
+- You can also build (compile) and run the binary like this in GNU/Linux:
+
+    go build hello.go
+    ./hello
+
+(The first command produce a binary and second command executes the binary)
+
+* Formatting Code
+
+- Use "go fmt <file.go>" to format Go source file
+- No more debate about formatting!
+- Can integrate with editors like Vim, Emacs etc.
+
+.image image/gopher5.png
+
+* Cross Compiling
+
+- The "go build" command produce a binary file native to the operating system and the architecture of the CPU (i386, x86_64 etc.)
+- Specify targeted platform using environment variables: GOOS & GOARCH
+- List of environment variables: [[https://golang.org/doc/install/source#environment]]
+
+* Organizing Code
+
+- *$GOPATH* directory is a workspace (sources, packages, and binaries)
+- Three sub-directories under $GOPATH: bin, pkg and src
+- *bin* directory contains executable binaries (add to $PATH)
+- The *src* directory contains the source files.
+- The *pkg* directory contains package objects used by go tool to create the final executable
+- The Go tool understands the layout of a workspace
+
+    mygo
+    |-- bin
+    |-- pkg
+    `-- src
+
+* Organizing Code ...
+
+If you are using GitHub for hosting code, you can create a directory structure under workspace like this:
+
+    src/github.com/<username>/<projectname>
+
+Replace the <username> with your GitHub username or organization name and <projectname> with the name of the project. For example:
+
+    src/github.com/example/introduction
+
+(*Note*: When you fork a project in GitHub use "go get" with the upstream location)
+
+* Getting third party packages
+
+- The "go get" command download source repositories and places them in the workspace
+
+    go get golang.org/x/tools/...
+
+- Repo URL and package path will be same normally (This helps Go tool to fetch)
+
+- To update use "-u" flag
+
+    go get -u github.com/example/introduction
+
+- [[https://golang.org/cmd/go/]]
+
+- *Activity*: Run "go get" as given above
+
+* Go Tools
+
+- Run "go help" to see list of available commands
+- Use "go help [command]" for more information about a command
+
+Few commonly used commands:
+
+- build - compile packages and dependencies
+- fmt - run gofmt on package sources
+- get - download and install packages and dependencies
+- install - compile and install packages and dependencies
+- run - compile and run Go program
+- test - test packages
+- version - print Go version
+
+* Keywords
+
+- Keywords are reserved words
+- Cannot be used as identifiers
+- Provide structure and meaning to the language
+
+
+    break        default      func         interface    select
+    case         defer        go           map          struct
+    chan         else         goto         package      switch
+    const        fallthrough  if           range        type
+    continue     for          import       return       var
+
+* Built-In Functions
+
+- Close channel: *close*
+- Length and capacity: *len*, *cap*
+- Allocation: *new*
+- Making slices, maps and channels: *make*
+- Appending to and copying slices: *append*, *copy*
+- Deletion of map elements: *delete*
+- Manipulating complex numbers: *complex*, *real*, *imag*
+- Handling panics: *panic*, *recover*
+
+* Comments
+
+- Two kinds of comments
+- C Style
+
+    /* This is a multi-line comment
+       ... and this is a the second line
+    */
+
+- C++ style
+
+    // Single line number
+    // Starts with two slashes
+
+- *Activity*: Update the `hello.go` with few comments and run
+
+* Primitive types
+
+int, uint, int8, uint8, ...
+bool, string
+float32, float64
+complex64, complex128
+
+.play code/primitive1.go /START OMIT/,/END OMIT/
+
+- [[https://golang.org/pkg/fmt]]
+
+* Variables
+
+- Type is explicitly specified but initialized with default zero values
+- The zero value is 0 for numeric types, false for Boolean type and empty string for strings.
+
+.play code/variable1.go /START OMIT/,/END OMIT/
+
+* Variables ...
+
+- Type is explicitly specified and initialized with given values
+
+.play code/variable2.go /START OMIT/,/END OMIT/
+
+* Variables ...
+
+- Type is inferred from the values that is given for initialization
+
+.play code/variable3.go /START OMIT/,/END OMIT/
+
+- Short variable declaration inside functions (Similar to above - type is inferred from the values that is given for initialization)
+
+.play code/variable4.go /START OMIT/,/END OMIT/
+
+* Constants
+
+- Constants are declared like variables, but with the const keyword.
+- Constants can be character, string, Boolean, or numeric values.
+- Constants cannot be declared using the := syntax.
+
+    const Male = true
+    const Pi = 3.14
+    const Name = "test"
+
+- [[https://blog.golang.org/constants]]
+
+- *Activity*: Write a program to define the above constants and print it
+
+* Type declarations
+
+type [name] [specification]
+
+- Custom types can be constructed based on built-in types (primitive or composite)
+- Examples:
+
+    // Celsius represent temperature in Celsius (a float64 type)
+    type Celsius float64
+
+    // Names represent an array of strings with length as 5
+    type Names [5]string
+
+- (Functions can bind to custom types - this is called methods)
+
+* Structs
+
+- A *struct* is a collection of fields.
+- Struct fields are accessed using a dot.
+
+.play code/struct1.go /START OMIT/,/END OMIT/
+
+* Structs ...
+
+- Person is a _struct_ type
+
+    type Person struct {
+        Name string
+        Age  int
+    }
+
+* Arrays
+
+- an ordered container type with a fixed number of data
+- the arrays are the foundation for slices
+- use slice instead of an array
+- number of values in the array is called it's length
+- An array's length is part of its type, so arrays cannot be re-sized.
+- The type *[n]T* is an array of n values of type T
+
+    colors := [3]string{"Red", "Green", "Blue"}
+    heights := [4]int{153, 146, 167, 170}
+
+* Arrays ...
+
+- if the length is different for two arrays, those are distinct incompatible types
+- The built-in *len* function gives the length of array.
+- Array values can be accessed using the index syntax
+- The expression *s[n]* accesses the nth element, starting from zero.
+
+    colors := [3]string{"Red", "Green", "Blue"}
+    i := colors[1]
+    fmt.Println(i)
+
+* Slices
+
+    []int, []struct{ Name string }
+
+- A slice points to an array of values and also includes a length.
+- *[]T* is a slice with elements of type T
+- *len(s)* returns the length of slice s
+- The length of slice can vary dynamically.
+- number of values in the slice is called it's length
+
+* Slices ...
+
+- Slices can contain any type, including other slices
+
+    colors := []string{"Red", "Green", "Blue"}
+    heights := []int{153, 146, 167, 170}
+
+* Slices ...
+
+- Slice values can be accessed using the index syntax
+- The expression *s[n]* accesses the nth element, starting from zero.
+
+    colors := []string{"Red", "Green", "Blue"}
+    i := colors[1]
+    fmt.Println(i)
+
+- [[http://blog.golang.org/go-slices-usage-and-internals]]
+- [[https://blog.golang.org/slices]]
+
+* Maps
+
+- A *map* maps keys to values
+
+.play code/maps1.go /START OMIT/,/END OMIT/
+
+- [[https://blog.golang.org/go-maps-in-action]]
+
+* Maps ...
+
+- Maps can be initialized with *make* before use
+
+.play code/maps2.go /START OMIT/,/END OMIT/
+
+- the *nil* map is empty and cannot be assigned to
+
+* Function declarations
+
+func [name] ([params]) [return value]
+func [name] ([params]) ([return values])
+
+A function to return sum of two _int_ values:
+
+.play code/functiondeclaration1.go /START OMIT/,/END OMIT/
+
+* Function declarations ...
+
+A function with multiple returned values:
+
+.play code/functiondeclaration2.go /START OMIT/,/END OMIT/
+
+* Function declarations ...
+
+Made clearer by naming the return values:
+
+.play code/functiondeclaration3.go /START OMIT/,/END OMIT/
+
+* If Conditions
+
+- Syntax inspired by C
+- Curly brace is mandatory
+
+.play code/if1.go /START OMIT/,/END OMIT/
+
+* If Conditions ...
+
+- The if statement can start with a short statement to execute before the condition
+- Variables declared by the statement are only in scope until the end of the if
+- Variables declared inside an if short statement are also available inside any of the else blocks
+
+.play code/if2.go /START OMIT/,/END OMIT/
+
+* Errors
+
+- Go programs express error state with *error* values
+- The error type is a built-in interface
+
+    type error interface {
+        Error() string
+    }
+
+- [[https://blog.golang.org/errors-are-values][Errors are values]]
+
+* Errors ...
+
+- Functions often return an error value, and calling code should handle errors by testing whether the error equals *nil*.
+
+.play code/error1.go /START OMIT/,/END OMIT/
+
+- A nil error denotes success; a non-nil error denotes failure.
+
+* Command line arguments
+
+- *os.Args* (slice) provides access to raw command-line arguments
+- The arguments can be accessed using slice index syntax:
+
+    os.Args[1]
+
+- Go provides a *flag* package supporting basic command-line flag parsing
+
+
+* Packages
+
+- Every Go program is made up of packages
+- Package name must be declared in source files
+- To create executable use name of package as *main*
+- Programs start running in package main
+- All the package files resides in a directory
+
+    package main
+
+* Packages ...
+
+- Import give access to exported stuff from other packages
+- Any "unexported" names are not accessible from outside the package
+- Foo is an exported name, as is FOO. The name foo is not exported
+- By convention, package name is the same as the last element of the import path
+- Initialization logic for package goes into a function named *init*
+- Use alias to avoid package name conflict with during imports
+
+    import (
+    	   "fmt"
+
+           myfmt "github.com/example/fmt"
+    )
+
+* Blank identifier
+
+- Underscore (*_*) is the blank identifier
+
+- Blank identifier can be used as import alias to invoke *init* function without using the package
+
+
+    import (
+           "database/sql"
+
+           _ "github.com/lib/pq"
+    )
+
+- Blank identifier can be used to ignore return values from function
+
+    x, _ := someFunc()
+
+* For Loop
+
+- The only looping construct (no while loop)
+- Syntax inspired by C
+- No parenthesis (not even optional)
+- Curly brace is mandatory
+
+.play code/for1.go /START OMIT/,/END OMIT/
+
+* For Loop ...
+
+- Pre and post statements can be empty (and drop the semicolons!)
+
+.play code/for2.go /START OMIT/,/END OMIT/
+
+* For Loop ...
+
+- An infinite loop can be created by removing the loop condition
+
+.play code/for3.go /START OMIT/,/END OMIT/
+
+
+* Range Loops
+
+- The _range_ form of the _for_ loop iterates over a slice or map.
+
+.play code/range1.go /START OMIT/,/END OMIT/
+
+When ranging over a slice, two values are returned for each iteration.
+
+- The first is the index, and the second is a copy of the element at that index.
+
+* Range with Maps
+
+When ranging over a map, two values are returned for each iteration.
+
+- The first is the key, and the second is a copy of the value.
+
+.play code/range2.go /START OMIT/,/END OMIT/
+
+* Nil slices
+
+- The zero value of a slice is _nil_
+- A _nil_ slice has a length and capacity of 0
+
+.play code/slice1.go /START OMIT/,/END OMIT/
+
+* Why capacity?
+
+.play code/cap1.go /START OMIT/,/END OMIT/
+
+* Switch statement
+
+- The cases are evaluated top to bottom until a match is found
+- There is no automatic fall through
+- Cases can be presented in comma-separated lists
+- break statements can be used to terminate a switch early
+
+* Switch statement ...
+
+.play code/switch1.go /START OMIT/,/END OMIT/
+
+* Switch statement ...
+
+If the switch has no expression it switches on true (useful to write an if-else-if-else chain)
+
+.play code/switch2.go /START OMIT/,/END OMIT/
+
+* Method declaration
+
+- Method is a function bound to a type (receiver)
+
+    func ([receiver]) [name] ([params]) ([return values])
+
+- A receiver could be any type with a name
+
+* Method declaration ...
+
+- Method bound to a struct:
+
+    type Person struct {
+        Name string
+        Age  int
+    }
+
+    func (p Person) Major() bool {
+        return p.Age >= 18
+    }
+
+* Method declaration ...
+
+- Method bound to a custom type named Celsius (float64):
+
+    // Celsius represent temperature in Celsius (a float64 type)
+    type Celsius float64
+
+    func (c Celsius) Freezing() bool {
+        return c <= 0
+    }
+
+* Method declaration ...
+
+- Constraint: Methods can be defined only on types declared in the same package.
+
+    // This won't compile
+    func (s string) Length() int { return len(s) }
+
+* Pointers
+
+- A pointer holds the memory address of a variable.
+- The type *T is a pointer to a T value. Its zero value is _nil_.
+
+    var i *int
+    var p *Person
+
+- The & operator generates a pointer to its operand.
+
+    i := 42
+    p = &i
+
+* Pointers ...
+
+- The * operator denotes the pointer's underlying value.
+
+    fmt.Println(*p) // read i through the pointer p
+    *p = 21         // set i through the pointer p
+
+- This is known as "dereferencing" or "indirecting".
+
+* Pointers ...
+
+- Unlike C, Go has no pointer arithmetic.
+- No pointer arithmetic, no pointers to unsafe memory.
+
+    a := "hello"
+    p := &a
+    p += 4  // no, you can't
+
+* Pointers ...
+
+.play code/pointer1.go /START OMIT/,/END OMIT/
+
+* Pointers ...
+
+Why pass by reference instead of pass by value?
+
+- Modify the receiver ("read/write" vs "read")
+- Very large struct and a deep copy is expensive
+- Consistency: Let all methods have pointer receivers
+
+* Pointers ...
+
+- Control what you pass to functions.
+- passing values, no side-effects:
+
+    func double(x int) {
+        x *= 2
+    }
+
+- passing pointers: side-effects possible:
+
+    func double(x *int) {
+        *x *= 2
+    }
+
+* Defer statement
+
+- Ensure a cleanup function is called later
+- To recover from runtime panic
+- Executed in LIFO order
+
+.play code/defer1.go /START OMIT/,/END OMIT/
+
+* Interface
+
+- Interfaces provide a way to specify the behavior of an object
+- A type can implement multiple interfaces
+- Named collections of method signatures
+
+    type Geometry interface {
+        Area() float64
+        Perimeter() float64
+    }
+
+* Interface ...
+
+- An interface type is defined by a set of methods
+- A value of interface type can hold any value that implements those methods
+- Interfaces are satisfied implicitly
+- A type implements an interface by implementing the methods.
+
+* Interface ...
+
+.play code/interface1.go /START OMIT/,/END OMIT/
+
+
+* Concurrency
+
+- Goroutines are lightweight threads managed by the Go runtime
+- Calling a function with _go_ keyword starts the goroutine
+
+.play code/concurrency1.go /START OMIT/,/END OMIT/
+
+- Goroutines can communicate to each other via channels (typed conduit)
+
+* Concurrency ...
+
+- You can send and receive values with the channel operator: <-
+
+    ch <- v    // Send v to channel ch.
+    v := <-ch  // Receive from ch, and
+               // assign value to v.
+
+- The data flows in the direction of the arrow.
+- Channels must be created before use:
+
+    ch := make(chan int)
+
+- Sends and receives block until the other side is ready
+- zero value for channel is _nil_
+
+* Concurrency ...
+
+
+.play code/concurrency2.go /START OMIT/,/END OMIT/
+
+
+* Concurrency ...
+
+.play code/concurrency3.go /START OMIT/,/END OMIT/
+
+* WaitGroup
+
+- _sync.WaitGroup_ provides a goroutine synchronization mechanism in Golang
+- A WaitGroup waits for a collection of goroutines to finish
+- _sync.WaitGroup_ provides 3 methods: Add, Done and Wait.
+- _Add_ method is used to identify how many goroutines need to be waited
+- When a goroutine exits, it must call _Done_
+- The main goroutine blocks on _Wait_
+
+* WaitGroup ...
+
+.play code/concurrency5.go /START OMIT/,/END OMIT/
+
+* WaitGroup ...
+
+.play code/concurrency4.go /START OMIT/,/END OMIT/
+
+
+* Who uses Go?
+
+- Google
+- Uber
+- Dropbox
+- BBC
+- Docker
+- Disqus
+- SoundCloud
+- Cloudflare
+- [[https://github.com/golang/go/wiki/GoUsers][https://github.com/golang/go/wiki/GoUsers]]
+- [[https://github.com/golang/go/wiki/SuccessStories][https://github.com/golang/go/wiki/SuccessStories]]
+
+* Go Resources
+
+- Use the word "golang" to search about Go in Google, Bing etc.
+- Twitter hash-tag #golang #GopherCon #GopherConIndia
+- Official website: [[http://golang.org][http://golang.org]]
+- Official blog: [[http://blog.golang.org][http://blog.golang.org]]
+- Experiment and share Go source code: [[http://play.golang.org][http://play.golang.org]]
+- [[https://gobyexample.com][https://gobyexample.com]]
+- Forum/Mailing List: [[https://groups.google.com/forum/#!forum/golang-nuts][https://groups.google.com/forum/#!forum/golang-nuts]]
+- Subreddit: [[http://www.reddit.com/r/golang][http://www.reddit.com/r/golang]]
+
+* Thank you
+
+.image image/gdg.png
+.image image/wtm_logo.png
